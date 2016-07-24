@@ -39,7 +39,7 @@ export default class GameManager {
             const gameRef = firebase.database().ref().child("games").child(gameId);
             return gameRef.once("value").then((snapshot) => {
                 const gameVal = snapshot.val();
-                if(gameVal.player2 === ""){
+                if(gameVal.player2 === "" && gameVal.player1 !== userObj.uid){
                     gameRef.update({
                         player2: userObj.uid,
                         [`online/${userObj.uid}`]: true
