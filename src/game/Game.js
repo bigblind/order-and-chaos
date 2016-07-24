@@ -2,6 +2,7 @@ import React from 'react';
 import {withRouter} from 'react-router';
 
 import GameManager from './gameManager';
+import GameUI from './GameUI';
 
 class Game extends React.Component {
     constructor(props){
@@ -25,7 +26,11 @@ class Game extends React.Component {
     }
     
     render() {
-        return <p>TEST {this.props.params.gameId}</p>
+        if(this.state.ready){
+            return <GameUI manager={this.gameManager}/>
+        }else{
+            return <p>Loading....</p>
+        }
     }
 }
 
