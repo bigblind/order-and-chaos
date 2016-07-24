@@ -28,7 +28,7 @@ const Home = () => {
     return (
         <div style={{color: "white"}}>
             <div style={columnStyle}>
-                <Link to="/game/new" style={firstButton}>Play against a friend</Link><br />
+                <Link to="/games/new" style={firstButton}>Play against a friend</Link><br />
                 <Link to= "/" style={nextButton}>Play against the computer <span style={{float:"right"}}>(coming soon)</span></Link>
             </div>
             <div style={columnStyle}>

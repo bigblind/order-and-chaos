@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, Route, IndexRoute, Redirect, browserHistory} from 'react-router'
+import "./firebaseApp";
 
 import App from './App';
 import Home from './Home';
+import Game from './game/Game';
 
 import "./index.css";
-
-const Game = () => <div>game</div>
 
 ReactDOM.render(
     <Router history={browserHistory}>

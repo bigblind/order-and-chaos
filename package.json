@@ -9,7 +9,7 @@
     "firebase": "^3.2.0",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
-    "reactfire": "git+https://github.com/bigblind/reactfire.git"
+    "reactfire": "git://github.com/bigblind/reactfire.git#x built"
   },
   "scripts": {
     "start": "react-scripts start",
