@@ -1,21 +1,43 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
 
-class App extends Component {
-  render() {
+const App = (props) => {
+    const headerStyle = {
+        fontFamily: "\"Lucida Sans Unicode\", \"Lucida Grande\", sans-serif",
+        fontSize: "32px",
+        borderBottom: "3px solid red",
+        color: "#333",
+        lineHeight: "70px",
+        textAlign: "center",
+        backgroundColor: "white"
+    };
+    const h1Style = {
+        verticalAlign: "middle",
+        display: "inlineBlock",
+        margin: 0
+    };
+    const wordStyle = {
+        color: "red"
+    };
+
+    const containerStyle = {
+        width: "80%",
+        margin: "0 auto",
+        minWidth: "340px",
+        maxWidth: "1200px"
+    }
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+        <div>
+            <header style={headerStyle}>
+                <h1 style={h1Style}>
+                    <span style={wordStyle}>ORDER</span>&nbsp;&amp;&nbsp;
+                    <span style={wordStyle}>CHAOS</span>
+                </h1>
+            </header>
+            <div style={containerStyle}>
+                {props.children}
+            </div>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
     );
-  }
-}
+};
 
 export default App;
