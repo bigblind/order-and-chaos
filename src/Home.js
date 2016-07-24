@@ -21,7 +21,9 @@ const Home = () => {
     const nextButton = {
         ...firstButton,
         margin: "0",
-        opacity: "0.7"
+        opacity: "0.7",
+        color: "blue",
+        borderColor: "blue"
     };
     return (
         <div style={{color: "white"}}>

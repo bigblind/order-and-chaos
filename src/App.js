@@ -4,7 +4,8 @@ const App = (props) => {
     const headerStyle = {
         fontFamily: "\"Lucida Sans Unicode\", \"Lucida Grande\", sans-serif",
         fontSize: "32px",
-        borderBottom: "3px solid red",
+        borderBottom: "6px solid red",
+        borderImage: "linear-gradient(90deg, #ff0000 45%, #0000ff 55%) 100% 1",
         color: "#333",
         lineHeight: "70px",
         textAlign: "center",
@@ -16,6 +17,9 @@ const App = (props) => {
         margin: 0
     };
     const wordStyle = {
+        color: "blue"
+    };
+    const word2Style = {
         color: "red"
     };
 
@@ -30,7 +34,7 @@ const App = (props) => {
             <header style={headerStyle}>
                 <h1 style={h1Style}>
                     <span style={wordStyle}>ORDER</span>&nbsp;&amp;&nbsp;
-                    <span style={wordStyle}>CHAOS</span>
+                    <span style={word2Style}>CHAOS</span>
                 </h1>
             </header>
             <div style={containerStyle}>
