@@ -76,12 +76,12 @@ export default class GameManager {
             phase,
             ...this.getPlayerIds(gameData)
         };
-
+        
+        gameData = {
+            ...gameData,
+            ...GameManager.getRockPaperScissorsData(gameData)
+        };
         gameData.isMyTurn = GameManager.isMyTurn(gameData);
-        gameData.iWonRockPaperScissors = GameManager.iWonRockPaperScissors(
-            gameData);
-        gameData.iPlayedRockPaperScissors = GameManager.iPlayedRockPaperScissors(
-            gameData);
         
         return gameData;
     }
@@ -114,6 +114,24 @@ export default class GameManager {
             [playerId]: decision,
             [playerId + "Time"]: firebase.database.ServerValue.TIMESTAMP
         });
+    }
+    
+    static getRockPaperScissorsData(game){
+        return {
+            iPlayedRockPaperScissors: GameManager.iPlayedRockPaperScissors(
+                game
+            ),
+            iWonRockPaperScissors: GameManager.iWonRockPaperScissors(game),
+            ...GameManager.getRockPaperScissorsMoves(game)
+        }
+    }
+    
+    static getRockPaperScissorsMoves(game){
+        const rpc = game.rockPaperScissors;
+        return {
+            myRockPaperScissorsMove: rpc[game.myPlayerId],
+            otherRockPaperScissorsMove: rpc[game.otherPlayerId]
+        }
     }
     
     static iPlayedRockPaperScissors(game){
