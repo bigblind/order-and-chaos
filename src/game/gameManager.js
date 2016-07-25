@@ -20,14 +20,16 @@ export default class GameManager {
                 grid: "....................................",
                 rockPaperScissors: {
                     player1: "",
-                    player2: ""
+                    player2: "",
+                    player1Time: 0,
+                    player2Time: 0
                 },
                 order: "",
                 currentTurn: 0,
                 online: {
                     [userObj.uid]: true
                 },
-                winner: ""
+                winner: "",
             };
             const gameRef = firebase.database().ref().child("games").push(gameData);
             return new GameManager(gameRef, userObj.uid);
@@ -57,7 +59,7 @@ export default class GameManager {
             phase = "rockPaperScissors"
         }
         const rpc = gameData.rockPaperScissors;
-        if(rpc.player1 !== "" && rpc.player2 !== "" && rpc.player1 !== rpc.player2){
+        if(rpc.player1 !== "" && rpc.player2 !== ""){
             phase = "chooserole";
         }
         if(gameData.order !== ""){
@@ -67,12 +69,74 @@ export default class GameManager {
             phase = "gameOver";
         }
 
-        return {
+        gameData = {
             ...gameData,
+            userId: this.userId,
             userRole,
             phase,
-            isMyTurn: (gameData.currentTurn % 2 === 0) ?
-                userRole === "order" : userRole === "chaos",
+            ...this.getPlayerIds(gameData)
+        };
+
+        gameData.isMyTurn = GameManager.isMyTurn(gameData);
+        gameData.iWonRockPaperScissors = GameManager.iWonRockPaperScissors(
+            gameData);
+        gameData.iPlayedRockPaperScissors = GameManager.iPlayedRockPaperScissors(
+            gameData);
+        
+        return gameData;
+    }
+
+    static isMyTurn(gameData) {
+        return (gameData.currentTurn % 2 === 0) ?
+            gameData.userRole === "order" : gameData.userRole === "chaos";
+    }
+
+    getPlayerIds(gameData) {
+        if(gameData.player1 === this.userId){
+            return {
+                myPlayerId: "player1",
+                otherPlayerId: "player2"
+            };
+        }else if(gameData.player2 === this.userId){
+            return {
+                myPlayerId: "player2",
+                otherPlayerId: "player1"
+            };
         }
+        return {
+            myPlayerId: null
+        };
+    }
+
+    playRockPaperScissors(game, decision){
+        const playerId = game.myPlayerId;
+        this.ref.child("rockPaperScissors").update({
+            [playerId]: decision,
+            [playerId + "Time"]: firebase.database.ServerValue.TIMESTAMP
+        });
+    }
+    
+    static iPlayedRockPaperScissors(game){
+        const myPlayerId = game.myPlayerId;
+        return game.rockPaperScissors[myPlayerId] !== ""
+    }
+    
+    static iWonRockPaperScissors(game){
+        const myPlayerId = game.myPlayerId;
+        const otherPlayererId = game.otherPlayerId;
+        const rpc = game.rockPaperScissors;
+        
+        const myChoice = rpc[myPlayerId];
+        const otherChoice = rpc[otherPlayererId];
+        
+        if(myChoice === otherChoice) {
+            return rpc[myPlayerId + "Time"] < rpc[otherPlayererId + "Time"];
+        }
+        
+        return (
+            myChoice === "rock" && otherChoice === "scissors" ||
+            myChoice === "paper" && otherChoice === "rock" ||
+            myChoice === "scissors" && otherChoice === "paper"
+        );
     }
 }
