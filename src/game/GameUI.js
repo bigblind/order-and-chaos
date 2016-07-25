@@ -2,18 +2,23 @@ import React from 'react';
 import ReactFire from 'reactfire';
 
 import WaitingForPlayerMessage from './WaitingForPlayerMessage';
+import RockPaperScissors from './RockPaperScissors';
 
 const GameUI =  (props) => {
-    console.log("GameUI props");
-    console.log(props);
     if(!props.gameData) {
         return <p>Loading...</p>
     }
+
     const game = props.manager.augmentData(props.gameData);
-    if(game.phase == "waitingForPlayer") {
+    if(game.phase === "waitingForPlayer") {
         return (
             <WaitingForPlayerMessage />
         )
+    }
+    if(game.phase === "rockPaperScissors"){
+        return (
+            <RockPaperScissors manager={props.manager} gameData={game} />
+        );
     }
 };
 

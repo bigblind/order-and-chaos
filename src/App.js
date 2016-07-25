@@ -14,7 +14,8 @@ const App = (props) => {
     const h1Style = {
         verticalAlign: "middle",
         display: "inlineBlock",
-        margin: 0
+        margin: 0,
+        fontSize:"0.8em"
     };
     const wordStyle = {
         color: "blue"
@@ -26,9 +27,9 @@ const App = (props) => {
     const containerStyle = {
         width: "80%",
         margin: "0 auto",
-        minWidth: "340px",
+        minWidth: "300px",
         maxWidth: "1200px"
-    }
+    };
     return (
         <div>
             <header style={headerStyle}>
