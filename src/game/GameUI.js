@@ -4,6 +4,7 @@ import ReactFire from 'reactfire';
 import WaitingForPlayerMessage from './WaitingForPlayerMessage';
 import RockPaperScissors from './RockPaperScissors';
 import RoleSelection from './RoleSelection';
+import GameArea from './GameArea';
 
 const GameUI =  (props) => {
     if(!props.gameData) {
@@ -24,6 +25,11 @@ const GameUI =  (props) => {
     if(game.phase === "chooserole") {
         return (
             <RoleSelection manager={props.manager} gameData={game} />
+        )
+    }
+    if(game.phase === "game") {
+        return (
+            <GameArea manager={props.manager} gameData={game} />
         )
     }
     return <p>Unknown game phase; {game.phase}</p>

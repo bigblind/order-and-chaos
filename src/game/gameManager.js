@@ -97,6 +97,22 @@ export default class GameManager {
         this.ref.update({order: orderPlayer});
     }
 
+    makeMove(game, x, y, color){
+        var index = y * 6 + x;
+        this.ref.update({
+            grid: game.grid.slice(0, index) + color + game.grid.slice(index+1, 36),
+            currentTurn: game.currentTurn + 1
+        });
+    }
+    
+    isCellAvailable(game, x, y) {
+        return game.grid[y * 6 + x] === "."
+    }
+
+    getCellColor(game, x, y){
+        return game.grid[y * 6 + x];
+    }
+
     static isMyTurn(gameData) {
         // The first turn is turn 0, so the first player's turn (order)
         // has even numbers.
