@@ -53,40 +53,53 @@ export default class GameManager {
     }
 
     augmentData(gameData){
-        const userRole = gameData.order === this.userId ? "order" : "chaos";
-        var phase = "waitingForPlayer";
-        if(gameData.player2 !== ""){
-            phase = "rockPaperScissors"
-        }
-        const rpc = gameData.rockPaperScissors;
-        if(rpc.player1 !== "" && rpc.player2 !== ""){
-            phase = "chooserole";
-        }
-        if(gameData.order !== ""){
-            phase = "game";
-        }
-        if(gameData.winner !== ""){
-            phase = "gameOver";
-        }
-
         gameData = {
             ...gameData,
             userId: this.userId,
-            userRole,
-            phase,
+            phase: GameManager.getGamePhase(gameData),
             ...this.getPlayerIds(gameData)
         };
         
         gameData = {
             ...gameData,
-            ...GameManager.getRockPaperScissorsData(gameData)
+            ...GameManager.getRockPaperScissorsData(gameData),
+            userRole: GameManager.getUserRole(gameData)
         };
         gameData.isMyTurn = GameManager.isMyTurn(gameData);
         
         return gameData;
     }
 
+    static getGamePhase(game) {
+        var phase = "waitingForPlayer";
+        if (game.player2 !== "") {
+            phase = "rockPaperScissors"
+        }
+        const rpc = game.rockPaperScissors;
+        if (rpc.player1 !== "" && rpc.player2 !== "") {
+            phase = "chooserole";
+        }
+        if (game.order !== "") {
+            phase = "game";
+        }
+        if (game.winner !== "") {
+            phase = "gameOver";
+        }
+        return phase;
+    }
+
+    static getUserRole(game) {
+        return game.order === game.myPlayerId ? "order" : "chaos";
+    }
+
+    chooseRole(game, role){
+        const orderPlayer = role === "order" ? game.myPlayerId : game.otherPlayerId;
+        this.ref.update({order: orderPlayer});
+    }
+
     static isMyTurn(gameData) {
+        // The first turn is turn 0, so the first player's turn (order)
+        // has even numbers.
         return (gameData.currentTurn % 2 === 0) ?
             gameData.userRole === "order" : gameData.userRole === "chaos";
     }

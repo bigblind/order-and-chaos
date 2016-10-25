@@ -50,15 +50,17 @@ export default (props) => {
             ...button1Style,
             backgroundColor: "red"
         };
+        const chooseOrder = props.manager.chooseRole.bind(props.manager, props.gameData, "order");
+        const chooseChaos = props.manager.chooseRole.bind(props.manager, props.gameData, "chaos");
         content = (
             <div>
-                <p>
+                <p> 
                     You won the right to choose which role you want to
                     take in the game.
                 </p>
                 <p style={{textAlign: "center"}}>
-                    <a style={button1Style}>ORDER</a>
-                    <a style={button2Style}>CHAOS</a>
+                    <a style={button1Style} onClick={chooseOrder}>ORDER</a>
+                    <a style={button2Style} onClick={chooseChaos}>CHAOS</a>
                 </p>
             </div>
         )
