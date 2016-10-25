@@ -29,7 +29,7 @@ export default class GameManager {
                 online: {
                     [userObj.uid]: true
                 },
-                winner: "",
+                winner: ""
             };
             const gameRef = firebase.database().ref().child("games").push(gameData);
             return new GameManager(gameRef, userObj.uid);
@@ -65,6 +65,8 @@ export default class GameManager {
             ...GameManager.getRockPaperScissorsData(gameData),
             userRole: GameManager.getUserRole(gameData)
         };
+
+        gameData.iWon = gameData.userRole === gameData.winner;
         gameData.isMyTurn = GameManager.isMyTurn(gameData);
         
         return gameData;
@@ -82,9 +84,6 @@ export default class GameManager {
         if (game.order !== "") {
             phase = "game";
         }
-        if (game.winner !== "") {
-            phase = "gameOver";
-        }
         return phase;
     }
 
@@ -98,19 +97,68 @@ export default class GameManager {
     }
 
     makeMove(game, x, y, color){
-        var index = y * 6 + x;
+        const index = y * 6 + x;
+        const newGrid = game.grid.slice(0, index) + color + game.grid.slice(index + 1, 36);
+        var winner = this.checkGridForWinner(newGrid);
         this.ref.update({
-            grid: game.grid.slice(0, index) + color + game.grid.slice(index+1, 36),
-            currentTurn: game.currentTurn + 1
+            grid: newGrid,
+            currentTurn: game.currentTurn + 1,
+            winner: winner
         });
+    }
+
+    checkGridForWinner(grid){
+        var r, c;
+
+        for (r = 0; r < 2; r++)
+            for (c = 0; c < 6; c++)
+                if (this.checkLine(grid, r, c, r + 1, c, r + 2, c, r + 3, c, r + 4, c))
+                    return "order";
+
+        // Check right
+        for (r = 0; r < 6; r++)
+            for (c = 0; c < 2; c++)
+                if (this.checkLine(grid, r, c, r, c+1, r, c+2, r, c+3, r, c+4))
+                    return "order";
+
+        // Check down-right
+        for (r = 0; r < 2; r++)
+            for (c = 0; c < 2; c++)
+                if (this.checkLine(grid, r, c, r+1, c+1, r+2, c+2, r+3, c+3, r+4, c+4))
+                    return "order";
+
+        // Check down-left
+        for (r = 4; r < 6; r++)
+            for (c = 0; c < 2; c++)
+                if (this.checkLine(grid, r, c, r-1, c+1, r-2, c+2, r-3, c+3, r-4, c+4))
+                    return "order";
+
+        if(grid.indexOf(".") === -1){
+            return "chaos";
+        }
+        return "";
+    }
+
+    checkLine(grid, x1, y1, x2, y2, x3, y3, x4, y4, x5, y5){
+        const c1 = this.getCellColor(grid, x1, y1),
+            c2 = this.getCellColor(grid, x2, y2),
+            c3 = this.getCellColor(grid, x3, y3),
+            c4 = this.getCellColor(grid, x4, y4),
+            c5 = this.getCellColor(grid, x5, y5);
+        const result = (c1 !== "." && (c1 === c2) && (c2 === c3) && (c3 === c4) && (c4 === c5));
+        console.log(`Result ${x1} ${y1} ${c1} ${x2} ${y2} ${c2} ${x3} ${y3} ${c3} ${x4} ${y4} ${c4} ${x5} ${y5} ${c5} -> ${result}`);
+        return result
     }
     
     isCellAvailable(game, x, y) {
         return game.grid[y * 6 + x] === "."
     }
 
-    getCellColor(game, x, y){
-        return game.grid[y * 6 + x];
+    getCellColor(grid, x, y){
+        if(grid.grid){
+            grid = grid.grid;
+        }
+        return grid[y * 6 + x];
     }
 
     static isMyTurn(gameData) {

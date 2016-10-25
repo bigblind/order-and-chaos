@@ -21,8 +21,20 @@ class GameArea extends React.Component {
             message = "Waiting for your opponent to make a turn.";
         }
 
+        if (props.gameData.winner) {
+            if (props.gameData.iWon) {
+                message = <img
+                    src="https://media.giphy.com/media/Kkjs4BcENiX8A/giphy.gif"
+                    style={{margin: "auto"}}/>
+            } else {
+                message = <img
+                    src="https://media.giphy.com/media/nYogYgSmIJaIo/giphy.gif"
+                    style={{margin: "auto"}}/>
+            }
+        }
+
         const messageBox = <div
-            style={{backgroundColor: "white", color: "#333", padding: "16px"}}>
+            style={{backgroundColor: "white", color: "#333", padding: "16px", textAlign: props.gameData.winner ? "center" : "left"}}>
             {message}
         </div>;
 
@@ -82,7 +94,7 @@ class GameArea extends React.Component {
     }
 
     makeCell(x, y){
-        const myTurn = this.props.gameData.isMyTurn;
+        const myTurn = this.props.gameData.isMyTurn && !this.props.gameData.winner;
         const canSelect = this.props.manager.isCellAvailable(this.props.gameData, x, y);
         var color = "rgba(0, 0, 0, 0)";
         if(this.props.manager.getCellColor(this.props.gameData, x, y) === "B"){
